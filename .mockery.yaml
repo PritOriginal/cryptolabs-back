@@ -1,0 +1,8 @@
+with-expecter: true
+packages:
+    github.com/PritOriginal/cryptolabs-back/internal/repository/alphabet:
+        # place your package-specific config here
+        config:
+          dir: "{{.InterfaceDir}}"
+        interfaces:
+          AlphabetRepository:
