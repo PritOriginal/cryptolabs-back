@@ -24,7 +24,8 @@ func NewMeasuringInformation(repo repository.AlphabetRepository) *MeasuringInfor
 func (uc *MeasuringInformation) GetAlphabet(setName string, customAlphabet string) (string, error) {
 	var alphabet string
 	if setName != "custom" {
-		alphabet, err := uc.alphabetRepo.Get(setName)
+		var err error
+		alphabet, err = uc.alphabetRepo.Get(setName)
 		if err != nil {
 			return alphabet, err
 		}
