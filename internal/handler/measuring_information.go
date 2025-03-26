@@ -30,7 +30,7 @@ func (h *MeasuringInformationHandler) GetAlphabet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		alphabetSet := r.URL.Query().Get("alphabet_set")
 
-		alphabet, err := h.uc.GetAlphabet(alphabetSet)
+		alphabet, err := h.uc.GetAlphabet(alphabetSet, "")
 		if err != nil {
 			return
 		}
@@ -42,18 +42,13 @@ func (h *MeasuringInformationHandler) GetAlphabet() http.HandlerFunc {
 func (h *MeasuringInformationHandler) GetInformationVolumeSymbol() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		alphabetSet := r.URL.Query().Get("alphabet_set")
-		alphabet_param := r.URL.Query().Get("alphabet")
+		customAlphabet := r.URL.Query().Get("alphabet")
 
-		var alphabet string
-		var err error
-		if alphabetSet != "custom" {
-			alphabet, err = h.uc.GetAlphabet(alphabetSet)
-			if err != nil {
-				render.Render(w, r, responses.ErrorRenderer(err))
-				return
-			}
-		} else {
-			alphabet = alphabet_param
+		alphabet, err := h.uc.GetAlphabet(alphabetSet, customAlphabet)
+		if err != nil {
+			h.log.Error("error get alphabet", logger.Err(err))
+			render.Render(w, r, responses.ErrorRenderer(err))
+			return
 		}
 
 		volume := h.uc.GetInformationVolumeSymbol(alphabet)
@@ -68,16 +63,11 @@ func (h *MeasuringInformationHandler) GetAmountOfInformation() http.HandlerFunc 
 		alphabetSet := r.URL.Query().Get("alphabet_set")
 		alphabet_param := r.URL.Query().Get("alphabet")
 
-		var alphabet string
-		var err error
-		if alphabetSet != "custom" {
-			alphabet, err = h.uc.GetAlphabet(alphabetSet)
-			if err != nil {
-				render.Render(w, r, responses.ErrorRenderer(err))
-				return
-			}
-		} else {
-			alphabet = alphabet_param
+		alphabet, err := h.uc.GetAlphabet(alphabetSet, alphabet_param)
+		if err != nil {
+			h.log.Error("error get alphabet", logger.Err(err))
+			render.Render(w, r, responses.ErrorRenderer(err))
+			return
 		}
 
 		amount := h.uc.GetAmountOfInformation(text, alphabet)

@@ -8,7 +8,7 @@ import (
 )
 
 type MeasuringInformationService interface {
-	GetAlphabet(name string) (string, error)
+	GetAlphabet(setName string, customAlphabet string) (string, error)
 	GetAmountOfInformation(text string, alphabet string) int
 	GetInformationVolumeSymbol(alphabet string) int
 }
@@ -21,10 +21,15 @@ func NewMeasuringInformation(repo repository.AlphabetRepository) *MeasuringInfor
 	return &MeasuringInformation{alphabetRepo: repo}
 }
 
-func (uc *MeasuringInformation) GetAlphabet(name string) (string, error) {
-	alphabet, err := uc.alphabetRepo.Get(name)
-	if err != nil {
-		return alphabet, err
+func (uc *MeasuringInformation) GetAlphabet(setName string, customAlphabet string) (string, error) {
+	var alphabet string
+	if setName != "custom" {
+		alphabet, err := uc.alphabetRepo.Get(setName)
+		if err != nil {
+			return alphabet, err
+		}
+	} else {
+		alphabet = customAlphabet
 	}
 	return alphabet, nil
 }
