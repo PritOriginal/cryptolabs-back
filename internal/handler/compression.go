@@ -20,6 +20,13 @@ func NewCompressionHandler(log *slog.Logger, s services.Compression) *Compressio
 	return &CompressionHandler{log, s}
 }
 
+func (h *CompressionHandler) render(w http.ResponseWriter, r *http.Request, v render.Renderer) {
+	if err := render.Render(w, r, v); err != nil {
+		h.log.Error("failed render", logger.Err(err))
+		render.Render(w, r, responses.ErrInternalServer)
+	}
+}
+
 func (h *CompressionHandler) renderBadRequest(w http.ResponseWriter, r *http.Request, msg string, err error) {
 	h.log.Error(msg, logger.Err(err))
 	render.Render(w, r, responses.ErrBadRequest)
@@ -35,11 +42,7 @@ func (h *CompressionHandler) Compress() http.HandlerFunc {
 
 		dataCompressed := h.s.Compress(data)
 
-		if err := render.Render(w, r, responses.SucceededRenderer(string(dataCompressed))); err != nil {
-			h.log.Error("failed succeeded render", logger.Err(err))
-			render.Render(w, r, responses.ErrInternalServer)
-			return
-		}
+		h.render(w, r, responses.SucceededRenderer(string(dataCompressed)))
 	}
 }
 
@@ -57,10 +60,6 @@ func (h *CompressionHandler) Decompress() http.HandlerFunc {
 			return
 		}
 
-		if err := render.Render(w, r, responses.SucceededRenderer(string(data))); err != nil {
-			h.log.Error("failed succeeded render", logger.Err(err))
-			render.Render(w, r, responses.ErrInternalServer)
-			return
-		}
+		h.render(w, r, responses.SucceededRenderer(string(data)))
 	}
 }

@@ -19,7 +19,12 @@ func NewMeasuringInformation(log *slog.Logger, uc services.MeasuringInformation)
 	return &MeasuringInformationHandler{log, uc}
 }
 
-// type MeasuringInformation
+func (h *MeasuringInformationHandler) render(w http.ResponseWriter, r *http.Request, v render.Renderer) {
+	if err := render.Render(w, r, v); err != nil {
+		h.log.Error("failed render", logger.Err(err))
+		render.Render(w, r, responses.ErrInternalServer)
+	}
+}
 
 func (h *MeasuringInformationHandler) GetAlphabet() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -30,11 +35,7 @@ func (h *MeasuringInformationHandler) GetAlphabet() http.HandlerFunc {
 			return
 		}
 
-		if err := render.Render(w, r, responses.SucceededRenderer(alphabet)); err != nil {
-			h.log.Error("failed succeeded render", logger.Err(err))
-			render.Render(w, r, responses.ErrInternalServer)
-			return
-		}
+		h.render(w, r, responses.SucceededRenderer(alphabet))
 	}
 }
 
@@ -57,11 +58,7 @@ func (h *MeasuringInformationHandler) GetInformationVolumeSymbol() http.HandlerF
 
 		volume := h.uc.GetInformationVolumeSymbol(alphabet)
 
-		if err := render.Render(w, r, responses.SucceededRenderer(volume)); err != nil {
-			h.log.Error("failed succeeded render", logger.Err(err))
-			render.Render(w, r, responses.ErrInternalServer)
-			return
-		}
+		h.render(w, r, responses.SucceededRenderer(volume))
 	}
 }
 
@@ -84,10 +81,6 @@ func (h *MeasuringInformationHandler) GetAmountOfInformation() http.HandlerFunc 
 		}
 
 		amount := h.uc.GetAmountOfInformation(text, alphabet)
-		if err := render.Render(w, r, responses.SucceededRenderer(amount)); err != nil {
-			h.log.Error("failed succeeded render", logger.Err(err))
-			render.Render(w, r, responses.ErrInternalServer)
-			return
-		}
+		h.render(w, r, responses.SucceededRenderer(amount))
 	}
 }
