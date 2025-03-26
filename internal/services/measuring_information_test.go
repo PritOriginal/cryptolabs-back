@@ -61,6 +61,11 @@ func TestMeasuringInformation_GetInformationVolumeSymbol(t *testing.T) {
 			args: args{alphabet: "abc"},
 			want: 2,
 		},
+		{
+			name: "test-3",
+			args: args{alphabet: "абв"},
+			want: 2,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
