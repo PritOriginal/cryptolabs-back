@@ -2,6 +2,7 @@ package services
 
 import (
 	"math"
+	"unicode/utf8"
 
 	repository "github.com/PritOriginal/cryptolabs-back/internal/repository/alphabet"
 )
@@ -29,7 +30,7 @@ func (uc *MeasuringInformation) GetAlphabet(name string) (string, error) {
 }
 func (uc *MeasuringInformation) GetInformationVolumeSymbol(alphabet string) int {
 	var volume int
-	lenAlphabet := len(alphabet)
+	lenAlphabet := utf8.RuneCountInString(alphabet)
 	if lenAlphabet > 0 {
 		volume = int(math.Ceil(math.Log2(float64(lenAlphabet))))
 	} else {
