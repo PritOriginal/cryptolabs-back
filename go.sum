@@ -1,5 +1,7 @@
 github.com/PritOriginal/problem-map-server v0.0.0-20250315163508-0c7440b85bc2 h1:DMEV1raAM/+QBq9ixOYtQKXFUCDrkU7vlVfmssZeQhw=
 github.com/PritOriginal/problem-map-server v0.0.0-20250315163508-0c7440b85bc2/go.mod h1:Hh5UU763HdVhqQvcw1lP6SutOHwLxhgp0uBE5WxLoT0=
+github.com/PritOriginal/problem-map-server v0.0.0-20250401081242-3c9353754ddc h1:0XL3LzAjRttVdq4pha6sDZLDjoXUinqIWTH4+x18nmY=
+github.com/PritOriginal/problem-map-server v0.0.0-20250401081242-3c9353754ddc/go.mod h1:Hh5UU763HdVhqQvcw1lP6SutOHwLxhgp0uBE5WxLoT0=
 github.com/ajg/form v1.5.1 h1:t9c7v8JUKu/XxOGBU0yjNpaMloxGEJhUkqFRq0ibGeU=
 github.com/ajg/form v1.5.1/go.mod h1:uL1WgH+h2mgNtvBq0339dVnzXdBETtL2LeUXaIv25UY=
 github.com/chigopher/pathlib v0.19.1 h1:RoLlUJc0CqBGwq239cilyhxPNLXTK+HXoASGyGznx5A=

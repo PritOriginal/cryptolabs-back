@@ -5,7 +5,7 @@ go 1.24.0
 require github.com/go-chi/render v1.0.3
 
 require (
-	github.com/PritOriginal/problem-map-server v0.0.0-20250315163508-0c7440b85bc2 // indirect
+	github.com/PritOriginal/problem-map-server v0.0.0-20250401081242-3c9353754ddc // indirect
 	github.com/chigopher/pathlib v0.19.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/color v1.18.0 // indirect

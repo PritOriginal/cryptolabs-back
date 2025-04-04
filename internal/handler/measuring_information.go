@@ -5,25 +5,17 @@ import (
 	"net/http"
 
 	"github.com/PritOriginal/cryptolabs-back/internal/services"
-	"github.com/PritOriginal/problem-map-server/pkg/logger"
+	"github.com/PritOriginal/problem-map-server/pkg/handlers"
 	"github.com/PritOriginal/problem-map-server/pkg/responses"
-	"github.com/go-chi/render"
 )
 
 type MeasuringInformationHandler struct {
-	log *slog.Logger
-	uc  services.MeasuringInformation
+	handlers.BaseHandler
+	uc services.MeasuringInformation
 }
 
 func NewMeasuringInformation(log *slog.Logger, uc services.MeasuringInformation) *MeasuringInformationHandler {
-	return &MeasuringInformationHandler{log, uc}
-}
-
-func (h *MeasuringInformationHandler) render(w http.ResponseWriter, r *http.Request, v render.Renderer) {
-	if err := render.Render(w, r, v); err != nil {
-		h.log.Error("failed render", logger.Err(err))
-		render.Render(w, r, responses.ErrInternalServer)
-	}
+	return &MeasuringInformationHandler{handlers.BaseHandler{Log: log}, uc}
 }
 
 func (h *MeasuringInformationHandler) GetAlphabet() http.HandlerFunc {
@@ -35,7 +27,7 @@ func (h *MeasuringInformationHandler) GetAlphabet() http.HandlerFunc {
 			return
 		}
 
-		h.render(w, r, responses.SucceededRenderer(alphabet))
+		h.Render(w, r, responses.SucceededRenderer(alphabet))
 	}
 }
 
@@ -46,14 +38,16 @@ func (h *MeasuringInformationHandler) GetInformationVolumeSymbol() http.HandlerF
 
 		alphabet, err := h.uc.GetAlphabet(alphabetSet, customAlphabet)
 		if err != nil {
-			h.log.Error("error get alphabet", logger.Err(err))
-			render.Render(w, r, responses.ErrorRenderer(err))
+			h.RenderError(w, r,
+				handlers.HandlerError{Msg: "error get alphabet", Err: err},
+				responses.ErrBadRequest,
+			)
 			return
 		}
 
 		volume := h.uc.GetInformationVolumeSymbol(alphabet)
 
-		h.render(w, r, responses.SucceededRenderer(volume))
+		h.Render(w, r, responses.SucceededRenderer(volume))
 	}
 }
 
@@ -65,12 +59,14 @@ func (h *MeasuringInformationHandler) GetAmountOfInformation() http.HandlerFunc 
 
 		alphabet, err := h.uc.GetAlphabet(alphabetSet, alphabet_param)
 		if err != nil {
-			h.log.Error("error get alphabet", logger.Err(err))
-			render.Render(w, r, responses.ErrorRenderer(err))
+			h.RenderError(w, r,
+				handlers.HandlerError{Msg: "error get alphabet", Err: err},
+				responses.ErrBadRequest,
+			)
 			return
 		}
 
 		amount := h.uc.GetAmountOfInformation(text, alphabet)
-		h.render(w, r, responses.SucceededRenderer(amount))
+		h.Render(w, r, responses.SucceededRenderer(amount))
 	}
 }
