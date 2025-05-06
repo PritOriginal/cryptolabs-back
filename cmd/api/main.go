@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
@@ -9,6 +10,7 @@ import (
 
 	"github.com/PritOriginal/cryptolabs-back/internal/handler"
 	slogger "github.com/PritOriginal/problem-map-server/pkg/logger"
+	"github.com/go-chi/chi/v5"
 )
 
 func main() {
@@ -21,15 +23,30 @@ func main() {
 	logger := slogger.SetupLogger("dev", f)
 
 	r := handler.GetRouter(logger)
+
+	server := New(logger, r)
+	server.Start()
+}
+
+type Server struct {
+	log    *slog.Logger
+	router *chi.Mux
+}
+
+func New(log *slog.Logger, router *chi.Mux) *Server {
+	return &Server{log: log, router: router}
+}
+
+func (s *Server) Start() {
 	go func() {
-		if err := http.ListenAndServe(":3333", r); err != nil {
-			logger.Error("failed to start server")
+		if err := http.ListenAndServe(":3333", s.router); err != nil {
+			s.log.Error("failed to start server")
 		}
 	}()
-	logger.Info("server started")
+	s.log.Info("server started")
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
 	<-done
-	logger.Info("server stopped")
+	s.log.Info("server stopped")
 }
