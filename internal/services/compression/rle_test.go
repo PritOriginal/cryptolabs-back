@@ -1,11 +1,11 @@
-package services
+package compression
 
 import (
 	"reflect"
 	"testing"
 )
 
-func TestCompressionService_Compress(t *testing.T) {
+func TestRLEService_Compress(t *testing.T) {
 	tests := []struct {
 		name string
 		data []byte
@@ -34,15 +34,20 @@ func TestCompressionService_Compress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &CompressionService{}
-			if got := s.Compress(tt.data); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("CompressionService.Compress() = %v, want %v", got, tt.want)
+			s := &RLEService{}
+			got, err := s.Compress(tt.data)
+			if err != nil {
+				t.Errorf("RLEService.Decompress() has err = %v", err)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("RLEService.Compress() = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
-func TestCompressionService_Decompress(t *testing.T) {
+func TestRLEServiceDecompress(t *testing.T) {
 
 	tests := []struct {
 		name    string
@@ -83,15 +88,15 @@ func TestCompressionService_Decompress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &CompressionService{}
+			s := &RLEService{}
 			got, err := s.Decompress(tt.data)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("CompressionService.Decompress() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("RLEService.Decompress() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !tt.wantErr {
 				if !reflect.DeepEqual(got, tt.want) {
-					t.Errorf("CompressionService.Decompress() = %v, want %v", got, tt.want)
+					t.Errorf("RLEService.Decompress() = %v, want %v", got, tt.want)
 				}
 			}
 		})
