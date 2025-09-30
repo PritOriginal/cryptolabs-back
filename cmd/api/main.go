@@ -2,51 +2,46 @@ package main
 
 import (
 	"log"
-	"log/slog"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/PritOriginal/cryptolabs-back/internal/handler"
+	"github.com/PritOriginal/cryptolabs-back/internal/app/api"
+	"github.com/PritOriginal/cryptolabs-back/internal/config"
 	slogger "github.com/PritOriginal/problem-map-server/pkg/logger"
-	"github.com/go-chi/chi/v5"
 )
 
 func main() {
-	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
+	cfg := config.MustLoad()
 
-	logger := slogger.SetupLogger("dev", f)
-
-	r := handler.GetRouter(logger)
-
-	server := New(logger, r)
-	server.Start()
-}
-
-type Server struct {
-	log    *slog.Logger
-	router *chi.Mux
-}
-
-func New(log *slog.Logger, router *chi.Mux) *Server {
-	return &Server{log: log, router: router}
-}
-
-func (s *Server) Start() {
-	go func() {
-		if err := http.ListenAndServe(":3333", s.router); err != nil {
-			s.log.Error("failed to start server")
+	var logFIle *os.File
+	if cfg.Env != slogger.Local {
+		logFIle, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		if err != nil {
+			log.Fatalf("error opening file: %v", err)
 		}
+		defer logFIle.Close()
+	}
+
+	logger, err := slogger.SetupLogger(cfg.Env, logFIle)
+	if err != nil {
+		log.Fatalf("error init logger: %v", err)
+	}
+
+	app := api.New(logger, cfg)
+
+	go func() {
+		app.MustRun()
 	}()
-	s.log.Info("server started")
+
+	// Graceful shutdown
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
+
 	<-done
-	s.log.Info("server stopped")
+
+	app.Stop()
+
+	logger.Info("server stopped")
 }
