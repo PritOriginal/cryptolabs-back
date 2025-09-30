@@ -1,5 +1,5 @@
 run:
-	go run ./cmd/api/
+	go run ./cmd/api/ --config=./configs/config.yaml
 
 build:
 	go build ./cmd/api/
