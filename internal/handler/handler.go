@@ -58,41 +58,5 @@ func GetRouter(log *slog.Logger) *chi.Mux {
 		r.Post("/decrypt", rsaHandler.Decrypt())
 	})
 
-	// rleService := compression.NewRLEService()
-	// rleHandler := NewCompressionHandler(log, rleService)
-	// r.Route("/rle", func(r chi.Router) {
-	// 	r.Post("/compress", rleHandler.Compress())
-	// 	r.Post("/compress/details", rleHandler.CompressWithDetails())
-	// 	r.Post("/decompress", rleHandler.Decompress())
-	// 	r.Post("/decompress/details", rleHandler.DecompressWithDetails())
-	// })
-
-	// huffmanService := compression.NewHuffmanService()
-	// huffmanHandler := NewCompressionHandler(log, huffmanService)
-	// r.Route("/huffman", func(r chi.Router) {
-	// 	r.Post("/compress", huffmanHandler.Compress())
-	// 	r.Post("/compress/details", huffmanHandler.CompressWithDetails())
-	// 	r.Post("/decompress", huffmanHandler.Decompress())
-	// 	r.Post("/decompress/details", huffmanHandler.DecompressWithDetails())
-	// })
-
-	// arithmeticService := compression.NewArithmeticService()
-	// arithmeticHandler := NewCompressionHandler(log, arithmeticService)
-	// r.Route("/arithmetic", func(r chi.Router) {
-	// 	r.Post("/compress", arithmeticHandler.Compress())
-	// 	r.Post("/compress/details", arithmeticHandler.CompressWithDetails())
-	// 	r.Post("/decompress", arithmeticHandler.Decompress())
-	// 	r.Post("/decompress/details", arithmeticHandler.DecompressWithDetails())
-	// })
-
-	// lzwService := compression.NewLZWService()
-	// lZWHandler := NewCompressionHandler(log, lzwService)
-	// r.Route("/lzw", func(r chi.Router) {
-	// 	r.Post("/compress", lZWHandler.Compress())
-	// 	r.Post("/compress/details", lZWHandler.CompressWithDetails())
-	// 	r.Post("/decompress", lZWHandler.Decompress())
-	// 	r.Post("/decompress/details", lZWHandler.DecompressWithDetails())
-	// })
-
 	return r
 }
