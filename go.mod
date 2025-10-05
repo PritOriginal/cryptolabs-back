@@ -6,7 +6,7 @@ require github.com/go-chi/render v1.0.3
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/PritOriginal/problem-map-server v0.0.0-20250928212948-94728776e8aa // indirect
+	github.com/PritOriginal/problem-map-server v0.0.0-20251005112658-846dbafd9fb4 // indirect
 	github.com/chigopher/pathlib v0.19.1 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fatih/color v1.18.0 // indirect
