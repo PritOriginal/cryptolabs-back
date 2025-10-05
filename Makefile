@@ -8,7 +8,7 @@ test:
 	go test ./...
 
 test-cover:
-	go test ./... -coverprofile cover.test.tmp -coverpkg ./...
-	cat cover.test.tmp | grep -v "mocks" > cover.test 
-	rm cover.test.tmp 
-	go tool cover -func cover.test 
+	go test ./... -coverprofile cover.out.tmp -coverpkg ./...
+	cat cover.out.tmp | grep -v "mocks" > cover.out 
+	rm cover.out.tmp 
+	go tool cover -func cover.out 
